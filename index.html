@@ -510,6 +510,43 @@ printUsername({
     <div class="call-stack-label">Call Stack</div>
     <div class="call-stack on-stack">
         <div class="call-stack-container">
+            <div class="call">printUsername()</div>
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="codes on-stack">
+        <pre class="code concat-code">
+function concat(str1, str2) {
+    return str1 + "" + str2;
+}
+        </pre>
+        <pre class="code combine-code">
+function combineNames(user) {
+    return concat(user.first,
+                  user.last);
+}
+        </pre>
+        <pre class="code print-code on-stack">
+function printUsername(user) {
+    var name = combineNames(user);
+    console.log(name);
+}
+        </pre>
+        <pre class="code">
+printUsername({
+    first: "Karl",
+    last: "Kirch"
+});
+        </pre>
+    </div>
+</div>
+
+---
+<!-- Basic Call Stack Example -->
+<div class="call-stack-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="call-stack on-stack">
+        <div class="call-stack-container">
             <div class="call">(Anonymous Function)()</div>
         </div>
     </div>
@@ -2017,6 +2054,83 @@ btn.addEventListener('click',
     <img class="event-loop" src="event-loop.png" />
 </div>
 
+
+---
+<!-- Interactive onclick event -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">document.getElementById()</div>
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+        </div>
+    </div>
+<div class="codes">
+
+```
+function handleClick(evt) {
+    console.log("Clicked!!")
+}
+
+var btn = document
+        .getElementById("theButton");
+
+btn.addEventListener('click',
+                        handleClick);
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+
+---
+<!-- Interactive onclick event -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+        </div>
+    </div>
+<div class="codes">
+
+```
+function handleClick(evt) {
+    console.log("Clicked!!")
+}
+
+var btn = document
+        .getElementById("theButton");
+
+btn.addEventListener('click',
+                        handleClick);
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
 ---
 <!-- Interactive onclick event -->
 <div class="js-runtime-viz">
@@ -3288,6 +3402,62 @@ console.log("Server is running");
 Server is running
     </pre>
     <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
         <div class="cb">handleRequest</div>
     </div>
     <img class="event-loop" src="event-loop.png" />
@@ -3892,6 +4062,7 @@ Server is running
     <img class="event-loop" src="event-loop.png" />
 </div>
 
+
 ---
 <!-- Interactive http server -->
 <div class="js-runtime-viz">
@@ -3964,16 +4135,12 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
+            <div class="call">url.match()</div>
             <div class="call">handleRequest()</div>
         </div>
     </div>
     <div class="external-apis">
         <div class="api-container">
-            <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 db cb</div>
-            </div>
             <div class="api">
                 http listener
                 <img src="spinner.gif" />
@@ -4013,9 +4180,11 @@ console.log("Server is running");
 Server is running
     </pre>
     <div class="callback-queue">
+        <div class="cb">req1 db cb</div>
     </div>
     <img class="event-loop" src="event-loop.png" />
 </div>
+
 
 ---
 <!-- Interactive http server -->
@@ -5404,6 +5573,52 @@ while(i < 10000000) {
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
+            <div class="call">Blocking CPU Task</div>
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">Blocking CPU Task</div>
             <div class="call">(Anonymous Function)()</div>
         </div>
     </div>
@@ -5450,6 +5665,7 @@ while(i < 10000000) {
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
+            <div class="call">Blocking CPU Task</div>
             <div class="call">(Anonymous Function)()</div>
         </div>
     </div>
@@ -5496,6 +5712,7 @@ while(i < 10000000) {
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
+            <div class="call">Blocking CPU Task</div>
             <div class="call">(Anonymous Function)()</div>
         </div>
     </div>
@@ -5543,6 +5760,7 @@ while(i < 10000000) {
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
+            <div class="call">Blocking CPU Task</div>
             <div class="call">(Anonymous Function)()</div>
         </div>
     </div>
@@ -5591,6 +5809,7 @@ while(i < 10000000) {
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
+            <div class="call">Blocking CPU Task</div>
             <div class="call">(Anonymous Function)()</div>
         </div>
     </div>
@@ -5640,6 +5859,7 @@ while(i < 10000000) {
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
+            <div class="call">Blocking CPU Task</div>
             <div class="call">(Anonymous Function)()</div>
         </div>
     </div>
@@ -5690,6 +5910,7 @@ while(i < 10000000) {
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
+            <div class="call">Blocking CPU Task</div>
             <div class="call">(Anonymous Function)()</div>
         </div>
     </div>
@@ -5730,6 +5951,7 @@ while(i < 10000000) {
     </div>
     <img class="event-loop" src="event-loop.png" />
     <img class="fail" src="explosion.png" />
+    <img class="unresponsive" src="pageunresponsive.jpg" />
 </div>
 
 

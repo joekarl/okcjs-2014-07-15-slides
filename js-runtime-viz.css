@@ -19,6 +19,12 @@
     left: -100px;
 }
 
+.js-runtime-viz .unresponsive {
+    position: absolute;
+    top: 150px;
+    left: 200px;
+}
+
 .js-runtime-viz .codes {
     position: absolute;
     left: 2%;

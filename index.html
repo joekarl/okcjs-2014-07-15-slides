@@ -137,6 +137,10 @@ Why I wanted to give this talk
 -->
 
 ---
+class: center, middle
+##Overview
+
+---
 
 <!--
 Picture of Javascript runtime
@@ -855,6 +859,43 @@ foo();
 </div>
 
 ---
+<!-- Stack Overflow Example -->
+<div class="call-stack-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">foo()</div>
+            <div class="call">foo()</div>
+            <div class="call">foo()</div>
+            <div class="call">foo()</div>
+            <div class="call">foo()</div>
+            <div class="call">foo()</div>
+            <div class="call">foo()</div>
+            <div class="call">foo()</div>
+            <div class="call">foo()</div>
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="codes on-stack">
+        <pre class="code foo-code on-stack">
+function foo() {
+    return foo();
+}
+        </pre>
+        <pre class="code">
+foo();
+        </pre>
+    </div>
+    <img class="fail" src="explosion.png" />
+    <img class="error" src="stackoverflow.png" />
+</div>
+
+
+
+
+
+
+---
 class: middle, center
 #Question: So how does async work within a callstack?
 
@@ -878,9 +919,12 @@ function bar() {
 }
         </pre>
         <pre class="code">
-setTimeout(function(){
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -909,9 +953,12 @@ function bar() {
 }
         </pre>
         <pre class="code">
-setTimeout(function(){
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -940,10 +987,47 @@ function bar() {
     return foo();
 }
         </pre>
-        <pre class="code on-stack">
-setTimeout(function(){
+        <pre class="code">
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code on-stack">
+setTimeout(doTimeout, 5000);
+        </pre>
+        <pre class="code">
+bar();
+        </pre>
+    </div>
+</div>
+
+---
+<!-- Async Example -->
+<div class="call-stack-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="codes on-stack">
+        <pre class="code foo-code">
+function foo() {
+    return;
+}
+        </pre>
+        <pre class="code bar-code">
+function bar() {
+    return foo();
+}
+        </pre>
+        <pre class="code">
+function doTimeout() {
+    console.log("TIMEOUT");
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -973,9 +1057,12 @@ function bar() {
 }
         </pre>
         <pre class="code">
-setTimeout(function(){
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -1006,9 +1093,12 @@ function bar() {
 }
         </pre>
         <pre class="code">
-setTimeout(function(){
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -1038,9 +1128,12 @@ function bar() {
 }
         </pre>
         <pre class="code">
-setTimeout(function(){
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -1069,9 +1162,12 @@ function bar() {
 }
         </pre>
         <pre class="code">
-setTimeout(function(){
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -1099,9 +1195,46 @@ function bar() {
 }
         </pre>
         <pre class="code">
-setTimeout(function(){
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
+        </pre>
+        <pre class="code">
+bar();
+        </pre>
+    </div>
+</div>
+
+---
+<!-- Async Example -->
+<div class="call-stack-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">doTimeout()</div>
+        </div>
+    </div>
+    <div class="codes">
+        <pre class="code foo-code">
+function foo() {
+    return;
+}
+        </pre>
+        <pre class="code bar-code">
+function bar() {
+    return foo();
+}
+        </pre>
+        <pre class="code on-stack">
+function doTimeout() {
+    console.log("TIMEOUT");
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -1116,6 +1249,74 @@ bar();
     <div class="call-stack">
         <div class="call-stack-container">
             <div class="call">console.log()</div>
+            <div class="call">doTimeout()</div>
+        </div>
+    </div>
+    <div class="codes">
+        <pre class="code foo-code">
+function foo() {
+    return;
+}
+        </pre>
+        <pre class="code bar-code">
+function bar() {
+    return foo();
+}
+        </pre>
+        <pre class="code on-stack">
+function doTimeout() {
+    console.log("TIMEOUT");
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
+        </pre>
+        <pre class="code">
+bar();
+        </pre>
+    </div>
+</div>
+
+---
+<!-- Async Example -->
+<div class="call-stack-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">doTimeout()</div>
+        </div>
+    </div>
+    <div class="codes">
+        <pre class="code foo-code">
+function foo() {
+    return;
+}
+        </pre>
+        <pre class="code bar-code">
+function bar() {
+    return foo();
+}
+        </pre>
+        <pre class="code on-stack">
+function doTimeout() {
+    console.log("TIMEOUT");
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
+        </pre>
+        <pre class="code">
+bar();
+        </pre>
+    </div>
+</div>
+
+---
+<!-- Async Example -->
+<div class="call-stack-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
         </div>
     </div>
     <div class="codes">
@@ -1130,9 +1331,12 @@ function bar() {
 }
         </pre>
         <pre class="code">
-setTimeout(function(){
+function doTimeout() {
     console.log("TIMEOUT");
-}, 5000);
+}
+        </pre>
+        <pre class="code">
+setTimeout(doTimeout, 5000);
         </pre>
         <pre class="code">
 bar();
@@ -1140,13 +1344,17 @@ bar();
     </div>
 </div>
 
----
-class: middle, center
-#Question: So how does async work within a callstack?
+
+
 
 ---
 class: middle, center
-#Answer: It can't, it needs help
+#???
+#How DOES async work within a callstack?!?!?
+
+---
+class: middle, center
+#Answer: It doesn't, it needs help
 
 ---
 layout: false
@@ -1244,6 +1452,19 @@ class: middle, center, inverse
 
 
 ---
+#External APIs
+* Do everything not Javascript related
+* Can use other threads
+* Examples of External APIs
+    - Network I/O
+    - Rendering Calls
+    - Timeouts/Intervals
+    - File System Access
+    - C++ code
+    - Web Workers
+
+
+---
 #Event Loop
 <!--
 Who knows what an event loop is?
@@ -1257,18 +1478,6 @@ Who's written one?
 <!--
 Literally all it does, grabs events off of the task queue and replaces the call stack with the code from the task queue
 -->
-
----
-#External APIs
-* Do everything not Javascript related
-* Can use other threads
-* Examples of External APIs
-    - Network I/O
-    - Rendering Calls
-    - Timeouts/Intervals
-    - File System Access
-    - C++ code
-    - Web Workers
 
 ---
 class: middle, center
@@ -1729,6 +1938,8 @@ Timeout complete
 
 
 
+
+
 ---
 class: middle, center
 ##Browser - Element onClick
@@ -2145,6 +2356,235 @@ Clicked!!
 
 
 
+---
+<!-- Interactive onclick event -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                theButton.onClick
+                <img src="spinner.gif" />
+                <div class="cb">handleClick</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function handleClick(evt) {
+    console.log("Clicked!!")
+}
+
+var btn = document
+        .getElementById("theButton");
+
+btn.addEventListener('click',
+                        handleClick);
+```
+</div>
+    <pre class="console">
+Clicked!!
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">handleClick</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+
+---
+<!-- Interactive onclick event -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">handleClick()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                theButton.onClick
+                <img src="spinner.gif" />
+                <div class="cb">handleClick</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function handleClick(evt) {
+    console.log("Clicked!!")
+}
+
+var btn = document
+        .getElementById("theButton");
+
+btn.addEventListener('click',
+                        handleClick);
+```
+</div>
+    <pre class="console">
+Clicked!!
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+
+---
+<!-- Interactive onclick event -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">console.log()</div>
+            <div class="call">handleClick()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                theButton.onClick
+                <img src="spinner.gif" />
+                <div class="cb">handleClick</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function handleClick(evt) {
+    console.log("Clicked!!")
+}
+
+var btn = document
+        .getElementById("theButton");
+
+btn.addEventListener('click',
+                        handleClick);
+```
+</div>
+    <pre class="console">
+Clicked!!
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive onclick event -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">handleClick()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                theButton.onClick
+                <img src="spinner.gif" />
+                <div class="cb">handleClick</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function handleClick(evt) {
+    console.log("Clicked!!")
+}
+
+var btn = document
+        .getElementById("theButton");
+
+btn.addEventListener('click',
+                        handleClick);
+```
+</div>
+    <pre class="console">
+Clicked!!
+Clicked!!
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+
+---
+<!-- Interactive onclick event -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                theButton.onClick
+                <img src="spinner.gif" />
+                <div class="cb">handleClick</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function handleClick(evt) {
+    console.log("Clicked!!")
+}
+
+var btn = document
+        .getElementById("theButton");
+
+btn.addEventListener('click',
+                        handleClick);
+```
+</div>
+    <pre class="console">
+Clicked!!
+Clicked!!
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+
+
+
+
+
+
+
+
+
 
 ---
 class: middle, center
@@ -2170,7 +2610,7 @@ class: middle, center
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2183,12 +2623,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2221,7 +2661,7 @@ console.log("Server is running");
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2234,12 +2674,115 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">require()</div>
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2273,7 +2816,7 @@ console.log("Server is running");
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2286,12 +2829,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2325,7 +2868,7 @@ console.log("Server is running");
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2338,12 +2881,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2378,7 +2921,7 @@ console.log("Server is running");
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2391,12 +2934,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2423,7 +2966,7 @@ console.log("Server is running");
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -2434,7 +2977,7 @@ console.log("Server is running");
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2447,12 +2990,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2481,7 +3024,7 @@ console.log("Server is running");
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -2492,7 +3035,7 @@ console.log("Server is running");
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2505,12 +3048,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2538,7 +3081,7 @@ console.log("Server is running");
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -2549,7 +3092,7 @@ console.log("Server is running");
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2562,12 +3105,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2594,7 +3137,7 @@ Server is running
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -2605,7 +3148,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2618,12 +3161,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2650,7 +3193,7 @@ Server is running
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -2661,7 +3204,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2674,12 +3217,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2688,10 +3231,9 @@ console.log("Server is running");
 Server is running
     </pre>
     <div class="callback-queue">
-        <div class="cb">handleRequest 1</div>
-        <div class="cb">handleRequest 2</div>
     </div>
     <img class="event-loop" src="event-loop.png" />
+    <img class="request" src="wildrequest.gif" />
 </div>
 
 ---
@@ -2703,13 +3245,12 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">handleRequest()</div>
         </div>
     </div>
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -2720,7 +3261,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2733,12 +3274,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2747,66 +3288,7 @@ console.log("Server is running");
 Server is running
     </pre>
     <div class="callback-queue">
-        <div class="cb">handleRequest 2</div>
-    </div>
-    <img class="event-loop" src="event-loop.png" />
-</div>
-
----
-<!-- Interactive http server -->
-<div class="js-runtime-viz">
-    <div class="call-stack-label">Call Stack</div>
-    <div class="external-apis-label">External APIs</div>
-    <div class="console-label">Console</div>
-    <div class="callback-queue-label">Callback Queue</div>
-    <div class="call-stack">
-        <div class="call-stack-container">
-            <div class="call">match()</div>
-            <div class="call">handleRequest()</div>
-        </div>
-    </div>
-    <div class="external-apis">
-        <div class="api-container">
-            <div class="api">
-                tcp listener
-                <img src="spinner.gif" />
-                <div class="cb">handleRequest</div>
-            </div>
-        </div>
-    </div>
-<div class="codes">
-
-```
-var http = require('http');
-
-function user(req,res) {
-    fetchUser(function(err, user){
-        res.end(JSON.stringify(user));
-    });
-}
-
-function fetchUser(cb) {
-    db.query("select user", cb);
-}
-
-function handleRequest(req,res) {
-    var url = req.url;
-    if (url.match(/\/user/)) {
-        user(req, res);
-    }
-}
-
-http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
-
-console.log("Server is running");
-```
-</div>
-    <pre class="console">
-Server is running
-    </pre>
-    <div class="callback-queue">
-        <div class="cb">handleRequest 2</div>
+        <div class="cb">handleRequest</div>
     </div>
     <img class="event-loop" src="event-loop.png" />
 </div>
@@ -2826,7 +3308,7 @@ Server is running
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -2837,7 +3319,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2850,12 +3332,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -2864,7 +3346,6 @@ console.log("Server is running");
 Server is running
     </pre>
     <div class="callback-queue">
-        <div class="cb">handleRequest 2</div>
     </div>
     <img class="event-loop" src="event-loop.png" />
 </div>
@@ -2878,14 +3359,14 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">user()</div>
+            <div class="call">url.match()</div>
             <div class="call">handleRequest()</div>
         </div>
     </div>
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -2896,7 +3377,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -2909,387 +3390,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
-
-console.log("Server is running");
-```
-</div>
-    <pre class="console">
-Server is running
-    </pre>
-    <div class="callback-queue">
-        <div class="cb">handleRequest 2</div>
-    </div>
-    <img class="event-loop" src="event-loop.png" />
-</div>
-
----
-<!-- Interactive http server -->
-<div class="js-runtime-viz">
-    <div class="call-stack-label">Call Stack</div>
-    <div class="external-apis-label">External APIs</div>
-    <div class="console-label">Console</div>
-    <div class="callback-queue-label">Callback Queue</div>
-    <div class="call-stack">
-        <div class="call-stack-container">
-            <div class="call">fetchUser()</div>
-            <div class="call">user()</div>
-            <div class="call">handleRequest()</div>
-        </div>
-    </div>
-    <div class="external-apis">
-        <div class="api-container">
-            <div class="api">
-                tcp listener
-                <img src="spinner.gif" />
-                <div class="cb">handleRequest</div>
-            </div>
-        </div>
-    </div>
-<div class="codes">
-
-```
-var http = require('http');
-
-function user(req,res) {
-    fetchUser(function(err, user){
-        res.end(JSON.stringify(user));
-    });
-}
-
-function fetchUser(cb) {
-    db.query("select user", cb);
-}
-
-function handleRequest(req,res) {
-    var url = req.url;
-    if (url.match(/\/user/)) {
-        user(req, res);
-    }
-}
-
-http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
-
-console.log("Server is running");
-```
-</div>
-    <pre class="console">
-Server is running
-    </pre>
-    <div class="callback-queue">
-        <div class="cb">handleRequest 2</div>
-    </div>
-    <img class="event-loop" src="event-loop.png" />
-</div>
-
----
-<!-- Interactive http server -->
-<div class="js-runtime-viz">
-    <div class="call-stack-label">Call Stack</div>
-    <div class="external-apis-label">External APIs</div>
-    <div class="console-label">Console</div>
-    <div class="callback-queue-label">Callback Queue</div>
-    <div class="call-stack">
-        <div class="call-stack-container">
-            <div class="call">user()</div>
-            <div class="call">handleRequest()</div>
-        </div>
-    </div>
-    <div class="external-apis">
-        <div class="api-container">
-            <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
-                <img src="spinner.gif" />
-                <div class="cb">handleRequest</div>
-            </div>
-        </div>
-    </div>
-<div class="codes">
-
-```
-var http = require('http');
-
-function user(req,res) {
-    fetchUser(function(err, user){
-        res.end(JSON.stringify(user));
-    });
-}
-
-function fetchUser(cb) {
-    db.query("select user", cb);
-}
-
-function handleRequest(req,res) {
-    var url = req.url;
-    if (url.match(/\/user/)) {
-        user(req, res);
-    }
-}
-
-http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
-
-console.log("Server is running");
-```
-</div>
-    <pre class="console">
-Server is running
-    </pre>
-    <div class="callback-queue">
-        <div class="cb">handleRequest 2</div>
-    </div>
-    <img class="event-loop" src="event-loop.png" />
-</div>
-
----
-<!-- Interactive http server -->
-<div class="js-runtime-viz">
-    <div class="call-stack-label">Call Stack</div>
-    <div class="external-apis-label">External APIs</div>
-    <div class="console-label">Console</div>
-    <div class="callback-queue-label">Callback Queue</div>
-    <div class="call-stack">
-        <div class="call-stack-container">
-            <div class="call">handleRequest()</div>
-        </div>
-    </div>
-    <div class="external-apis">
-        <div class="api-container">
-            <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
-                <img src="spinner.gif" />
-                <div class="cb">handleRequest</div>
-            </div>
-        </div>
-    </div>
-<div class="codes">
-
-```
-var http = require('http');
-
-function user(req,res) {
-    fetchUser(function(err, user){
-        res.end(JSON.stringify(user));
-    });
-}
-
-function fetchUser(cb) {
-    db.query("select user", cb);
-}
-
-function handleRequest(req,res) {
-    var url = req.url;
-    if (url.match(/\/user/)) {
-        user(req, res);
-    }
-}
-
-http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
-
-console.log("Server is running");
-```
-</div>
-    <pre class="console">
-Server is running
-    </pre>
-    <div class="callback-queue">
-        <div class="cb">handleRequest 2</div>
-    </div>
-    <img class="event-loop" src="event-loop.png" />
-</div>
-
----
-<!-- Interactive http server -->
-<div class="js-runtime-viz">
-    <div class="call-stack-label">Call Stack</div>
-    <div class="external-apis-label">External APIs</div>
-    <div class="console-label">Console</div>
-    <div class="callback-queue-label">Callback Queue</div>
-    <div class="call-stack">
-        <div class="call-stack-container">
-        </div>
-    </div>
-    <div class="external-apis">
-        <div class="api-container">
-            <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
-                <img src="spinner.gif" />
-                <div class="cb">handleRequest</div>
-            </div>
-        </div>
-    </div>
-<div class="codes">
-
-```
-var http = require('http');
-
-function user(req,res) {
-    fetchUser(function(err, user){
-        res.end(JSON.stringify(user));
-    });
-}
-
-function fetchUser(cb) {
-    db.query("select user", cb);
-}
-
-function handleRequest(req,res) {
-    var url = req.url;
-    if (url.match(/\/user/)) {
-        user(req, res);
-    }
-}
-
-http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
-
-console.log("Server is running");
-```
-</div>
-    <pre class="console">
-Server is running
-    </pre>
-    <div class="callback-queue">
-        <div class="cb">handleRequest 2</div>
-    </div>
-    <img class="event-loop" src="event-loop.png" />
-</div>
-
----
-<!-- Interactive http server -->
-<div class="js-runtime-viz">
-    <div class="call-stack-label">Call Stack</div>
-    <div class="external-apis-label">External APIs</div>
-    <div class="console-label">Console</div>
-    <div class="callback-queue-label">Callback Queue</div>
-    <div class="call-stack">
-        <div class="call-stack-container">
-            <div class="call">handleRequest()</div>
-        </div>
-    </div>
-    <div class="external-apis">
-        <div class="api-container">
-            <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
-                <img src="spinner.gif" />
-                <div class="cb">handleRequest</div>
-            </div>
-        </div>
-    </div>
-<div class="codes">
-
-```
-var http = require('http');
-
-function user(req,res) {
-    fetchUser(function(err, user){
-        res.end(JSON.stringify(user));
-    });
-}
-
-function fetchUser(cb) {
-    db.query("select user", cb);
-}
-
-function handleRequest(req,res) {
-    var url = req.url;
-    if (url.match(/\/user/)) {
-        user(req, res);
-    }
-}
-
-http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
-
-console.log("Server is running");
-```
-</div>
-    <pre class="console">
-Server is running
-    </pre>
-    <div class="callback-queue">
-    </div>
-    <img class="event-loop" src="event-loop.png" />
-</div>
-
----
-<!-- Interactive http server -->
-<div class="js-runtime-viz">
-    <div class="call-stack-label">Call Stack</div>
-    <div class="external-apis-label">External APIs</div>
-    <div class="console-label">Console</div>
-    <div class="callback-queue-label">Callback Queue</div>
-    <div class="call-stack">
-        <div class="call-stack-container">
-            <div class="call">match()</div>
-            <div class="call">handleRequest()</div>
-        </div>
-    </div>
-    <div class="external-apis">
-        <div class="api-container">
-            <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
-                <img src="spinner.gif" />
-                <div class="cb">handleRequest</div>
-            </div>
-        </div>
-    </div>
-<div class="codes">
-
-```
-var http = require('http');
-
-function user(req,res) {
-    fetchUser(function(err, user){
-        res.end(JSON.stringify(user));
-    });
-}
-
-function fetchUser(cb) {
-    db.query("select user", cb);
-}
-
-function handleRequest(req,res) {
-    var url = req.url;
-    if (url.match(/\/user/)) {
-        user(req, res);
-    }
-}
-
-http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3317,12 +3423,7 @@ Server is running
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3333,7 +3434,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3346,12 +3447,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3373,19 +3474,14 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">user()</div>
+            <div class="call">userRequest()</div>
             <div class="call">handleRequest()</div>
         </div>
     </div>
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3396,7 +3492,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3409,12 +3505,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3437,19 +3533,14 @@ Server is running
     <div class="call-stack">
         <div class="call-stack-container">
             <div class="call">fetchUser()</div>
-            <div class="call">user()</div>
+            <div class="call">userRequest()</div>
             <div class="call">handleRequest()</div>
         </div>
     </div>
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3460,7 +3551,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3473,12 +3564,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3500,7 +3591,7 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">user()</div>
+            <div class="call">userRequest()</div>
             <div class="call">handleRequest()</div>
         </div>
     </div>
@@ -3509,15 +3600,10 @@ Server is running
             <div class="api">
                 I/O listener
                 <img src="spinner.gif" />
-                <div class="cb">req2 cb</div>
+                <div class="cb">req1 db cb</div>
             </div>
             <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3528,7 +3614,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3541,12 +3627,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3576,15 +3662,10 @@ Server is running
             <div class="api">
                 I/O listener
                 <img src="spinner.gif" />
-                <div class="cb">req2 cb</div>
+                <div class="cb">req1 db cb</div>
             </div>
             <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3595,7 +3676,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3608,12 +3689,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3642,15 +3723,10 @@ Server is running
             <div class="api">
                 I/O listener
                 <img src="spinner.gif" />
-                <div class="cb">req2 cb</div>
+                <div class="cb">req1 db cb</div>
             </div>
             <div class="api">
-                I/O listener
-                <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
-            </div>
-            <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3661,7 +3737,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3674,12 +3750,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3708,10 +3784,10 @@ Server is running
             <div class="api">
                 I/O listener
                 <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
+                <div class="cb">req1 db cb</div>
             </div>
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3722,7 +3798,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3735,12 +3811,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3749,7 +3825,7 @@ console.log("Server is running");
 Server is running
     </pre>
     <div class="callback-queue">
-        <div class="cb">req2 cb</div>
+        <div class="cb">handleRequest</div>
     </div>
     <img class="event-loop" src="event-loop.png" />
 </div>
@@ -3763,7 +3839,7 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">req2 cb()</div>
+            <div class="call">handleRequest()</div>
         </div>
     </div>
     <div class="external-apis">
@@ -3771,10 +3847,10 @@ Server is running
             <div class="api">
                 I/O listener
                 <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
+                <div class="cb">req1 db cb</div>
             </div>
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3785,7 +3861,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3798,12 +3874,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3825,8 +3901,8 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">end()</div>
-            <div class="call">req2 cb()</div>
+            <div class="call">url.match()</div>
+            <div class="call">handleRequest()</div>
         </div>
     </div>
     <div class="external-apis">
@@ -3834,10 +3910,10 @@ Server is running
             <div class="api">
                 I/O listener
                 <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
+                <div class="cb">req1 db cb</div>
             </div>
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3848,7 +3924,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3861,12 +3937,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3888,7 +3964,7 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">req2 cb()</div>
+            <div class="call">handleRequest()</div>
         </div>
     </div>
     <div class="external-apis">
@@ -3896,10 +3972,10 @@ Server is running
             <div class="api">
                 I/O listener
                 <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
+                <div class="cb">req1 db cb</div>
             </div>
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3910,7 +3986,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3923,12 +3999,692 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">handleRequest()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">req1 db cb</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">userRequest()</div>
+            <div class="call">handleRequest()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">req1 db cb</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">fetchUser()</div>
+            <div class="call">userRequest()</div>
+            <div class="call">handleRequest()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">req1 db cb</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">userRequest()</div>
+            <div class="call">handleRequest()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                I/O listener
+                <img src="spinner.gif" />
+                <div class="cb">req2 db cb</div>
+            </div>
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">req1 db cb</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">handleRequest()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                I/O listener
+                <img src="spinner.gif" />
+                <div class="cb">req2 db cb</div>
+            </div>
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">req1 db cb</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                I/O listener
+                <img src="spinner.gif" />
+                <div class="cb">req2 db cb</div>
+            </div>
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">req1 db cb</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(req1 db cb)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                I/O listener
+                <img src="spinner.gif" />
+                <div class="cb">req2 db cb</div>
+            </div>
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">res.end()</div>
+            <div class="call">(req1 db cb)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                I/O listener
+                <img src="spinner.gif" />
+                <div class="cb">req2 db cb</div>
+            </div>
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">JSON.stringify()</div>
+            <div class="call">res.end()</div>
+            <div class="call">(req1 db cb)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                I/O listener
+                <img src="spinner.gif" />
+                <div class="cb">req2 db cb</div>
+            </div>
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">res.end()</div>
+            <div class="call">(req1 db cb)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                I/O listener
+                <img src="spinner.gif" />
+                <div class="cb">req2 db cb</div>
+            </div>
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(req1 db cb)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                I/O listener
+                <img src="spinner.gif" />
+                <div class="cb">req2 db cb</div>
+            </div>
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -3957,10 +4713,10 @@ Server is running
             <div class="api">
                 I/O listener
                 <img src="spinner.gif" />
-                <div class="cb">req1 cb</div>
+                <div class="cb">req2 db cb</div>
             </div>
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -3971,7 +4727,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -3984,12 +4740,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -4016,7 +4772,7 @@ Server is running
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -4027,7 +4783,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -4040,12 +4796,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -4054,7 +4810,7 @@ console.log("Server is running");
 Server is running
     </pre>
     <div class="callback-queue">
-        <div class="cb">req1 cb</div>
+        <div class="cb">req2 db cb</div>
     </div>
     <img class="event-loop" src="event-loop.png" />
 </div>
@@ -4068,13 +4824,13 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">req1 cb()</div>
+            <div class="call">(req2 db cb)()</div>
         </div>
     </div>
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -4085,7 +4841,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -4098,70 +4854,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
-
-console.log("Server is running");
-```
-</div>
-    <pre class="console">
-Server is running
-    </pre>
-    <div class="callback-queue">
-    </div>
-    <img class="event-loop" src="event-loop.png" />
-</div>
-
----
-<!-- Interactive http server -->
-<div class="js-runtime-viz">
-    <div class="call-stack-label">Call Stack</div>
-    <div class="external-apis-label">External APIs</div>
-    <div class="console-label">Console</div>
-    <div class="callback-queue-label">Callback Queue</div>
-    <div class="call-stack">
-        <div class="call-stack-container">
-            <div class="call">end()</div>
-            <div class="call">req1 cb()</div>
-        </div>
-    </div>
-    <div class="external-apis">
-        <div class="api-container">
-            <div class="api">
-                tcp listener
-                <img src="spinner.gif" />
-                <div class="cb">handleRequest</div>
-            </div>
-        </div>
-    </div>
-<div class="codes">
-
-```
-var http = require('http');
-
-function user(req,res) {
-    fetchUser(function(err, user){
-        res.end(JSON.stringify(user));
-    });
-}
-
-function fetchUser(cb) {
-    db.query("select user", cb);
-}
-
-function handleRequest(req,res) {
-    var url = req.url;
-    if (url.match(/\/user/)) {
-        user(req, res);
-    }
-}
-
-http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -4183,13 +4881,14 @@ Server is running
     <div class="callback-queue-label">Callback Queue</div>
     <div class="call-stack">
         <div class="call-stack-container">
-            <div class="call">req1 cb()</div>
+            <div class="call">res.end()</div>
+            <div class="call">(req2 db cb)()</div>
         </div>
     </div>
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -4200,7 +4899,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -4213,12 +4912,186 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">JSON.stringify()</div>
+            <div class="call">res.end()</div>
+            <div class="call">(req2 db cb)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">res.end()</div>
+            <div class="call">(req2 db cb)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
+
+console.log("Server is running");
+```
+</div>
+    <pre class="console">
+Server is running
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive http server -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(req2 db cb)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                http listener
+                <img src="spinner.gif" />
+                <div class="cb">handleRequest</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+var http = require('http');
+
+function userRequest(req,res) {
+    fetchUser(function(err, user){
+        res.end(JSON.stringify(user));
+    });
+}
+
+function fetchUser(cb) {
+    db.query("select user", cb);
+}
+
+function handleRequest(req,res) {
+    var url = req.url;
+    if (url.match(/\/user/)) {
+        userRequest(req, res);
+    }
+}
+
+http.createServer(handleRequest)
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -4245,7 +5118,7 @@ Server is running
     <div class="external-apis">
         <div class="api-container">
             <div class="api">
-                tcp listener
+                http listener
                 <img src="spinner.gif" />
                 <div class="cb">handleRequest</div>
             </div>
@@ -4256,7 +5129,7 @@ Server is running
 ```
 var http = require('http');
 
-function user(req,res) {
+function userRequest(req,res) {
     fetchUser(function(err, user){
         res.end(JSON.stringify(user));
     });
@@ -4269,12 +5142,12 @@ function fetchUser(cb) {
 function handleRequest(req,res) {
     var url = req.url;
     if (url.match(/\/user/)) {
-        user(req, res);
+        userRequest(req, res);
     }
 }
 
 http.createServer(handleRequest)
-            .listen(8080, '0.0.0.0');
+        .listen(8080, '0.0.0.0');
 
 console.log("Server is running");
 ```
@@ -4286,6 +5159,10 @@ Server is running
     </div>
     <img class="event-loop" src="event-loop.png" />
 </div>
+
+
+
+
 
 
 
@@ -4302,16 +5179,577 @@ Slow calls
 ![](Dramatic-Prairie-Dog.gif)
 
 ---
-#Implications...
-* ui responsiveness
-* throughput
-* scalability
+#Implications of blocking...
+* Slow UI responsiveness
+* Limited throughput
+* Poor scalability
+* General user experience
 
 ---
-#Little Things
-* setTimeout resolution
-* setTimeout vs setImmediate vs nextTick
-* requestAnimationFrame
+class: middle, center
+##Blocking example
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">setInterval()</div>
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">setInterval()</div>
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">onInterval</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">renderUI</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">renderUI</div>
+        <div class="cb">acceptConnection</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">renderUI</div>
+        <div class="cb">acceptConnection</div>
+        <div class="cb">writeResponse</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+</div>
+
+---
+<!-- Interactive blocking -->
+<div class="js-runtime-viz">
+    <div class="call-stack-label">Call Stack</div>
+    <div class="external-apis-label">External APIs</div>
+    <div class="console-label">Console</div>
+    <div class="callback-queue-label">Callback Queue</div>
+    <div class="call-stack">
+        <div class="call-stack-container">
+            <div class="call">(Anonymous Function)()</div>
+        </div>
+    </div>
+    <div class="external-apis">
+        <div class="api-container">
+            <div class="api">
+                interval listener
+                <img src="spinner.gif" />
+                <div class="cb">onInterval</div>
+            </div>
+        </div>
+    </div>
+<div class="codes">
+
+```
+function onInterval() {
+    console.log("INTERVAL");
+}
+
+setInterval(onInterval, 5000);
+
+var i = 0;
+while(i < 10000000) {
+    //do some cpu heavy thing
+    i++;
+}
+```
+</div>
+    <pre class="console">
+    </pre>
+    <div class="callback-queue">
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">onInterval</div>
+        <div class="cb">renderUI</div>
+        <div class="cb">acceptConnection</div>
+        <div class="cb">writeResponse</div>
+    </div>
+    <img class="event-loop" src="event-loop.png" />
+    <img class="fail" src="explosion.png" />
+</div>
+
+
+
+
+
+
+
+---
+#General Blocking Rules
+* **DO NOT** use "sync" versions of functions
+    - fs.readSync()
+    - jQuery.ajax({async: false})
+* Resolve your callbacks asynchronously
+    - can starve I/O events if you don't
+    - use setTimeout(cb, 0) or setImmediate(cb)
+* Defer CPU intensive tasks
+    - C++
+    - Another process
+    - Service layer
 
 ---
 #Future

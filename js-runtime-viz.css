@@ -7,6 +7,18 @@
     outline: 1px solid black;
 }
 
+.js-runtime-viz .request {
+    position: absolute;
+    top: 30px;
+    left: 70px;
+}
+
+.js-runtime-viz .fail {
+    position: absolute;
+    top: -50px;
+    left: -100px;
+}
+
 .js-runtime-viz .codes {
     position: absolute;
     left: 2%;

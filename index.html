@@ -5752,11 +5752,23 @@ while(i < 10000000) {
     - Service layer
 
 ---
-#Future
-* CSS animations
-* Web Workers
-* Generators
-* jxcore
+#Mitigation
+* Browser
+    - Ajax
+    - CSS animations
+    - Web Workers
+* Node
+    - Messaging
+    - Nginx
+    - setImmediate()
+
+---
+#Recap
+* Javascript the language is single threaded
+* Javascript the runtime is not
+* Parts of the runtime communicate via the event loop
+* DON'T BLOCK THE EVENT LOOP
+* None of this is magic
 
 ---
 class: middle, center
